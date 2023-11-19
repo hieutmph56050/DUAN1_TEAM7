@@ -131,11 +131,13 @@ public class Form_SanPham extends javax.swing.JPanel {
             giaMax = Integer.parseInt(txtCaoNhat.getText());
         }
 
-        String  mau = (String) cbbFilter_Mau.getSelectedItem();
-        List<SanPhamCT> listPages = service.FilterPage(giaMin, giaMax, mau);
+        String mau = (String) cbbFilter_Mau.getSelectedItem();
+        String chatLieu = (String) cbbFilter_CL.getSelectedItem();
+        String hinhDang = (String) cbbFilter_HD.getSelectedItem();
+        List<SanPhamCT> listPages = service.FilterPage(giaMin, giaMax, mau, chatLieu, hinhDang);
         this.getPages(listPages);
 
-        List<SanPhamCT> list = service.FilterData(giaMin, giaMax, mau, pages, limit);
+        List<SanPhamCT> list = service.FilterData(giaMin, giaMax, mau, chatLieu, hinhDang, pages, limit);
 
         for (SanPhamCT spct : list) {
             model.addRow(new Object[]{
@@ -511,41 +513,41 @@ public class Form_SanPham extends javax.swing.JPanel {
         }
     }
 
-    private void loadTitleText() {
-        txtThapNhat.setText("Min");
-        txtThapNhat.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (txtThapNhat.getText().equals("Min")) {
-                    txtThapNhat.setText(null);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (txtThapNhat.getText().isEmpty()) {
-                    txtThapNhat.setText("Min");
-                }
-            }
-        });
-
-        txtCaoNhat.setText("Max");
-        txtCaoNhat.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (txtCaoNhat.getText().equals("Max")) {
-                    txtCaoNhat.setText(null);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (txtCaoNhat.getText().isEmpty()) {
-                    txtCaoNhat.setText("Max");
-                }
-            }
-        });
-    }
+//    private void loadTitleText() {
+//        txtThapNhat.setText("Min");
+//        txtThapNhat.addFocusListener(new FocusListener() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                if (txtThapNhat.getText().equals("Min")) {
+//                    txtThapNhat.setText(null);
+//                }
+//            }
+//
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                if (txtThapNhat.getText().isEmpty()) {
+//                    txtThapNhat.setText("Min");
+//                }
+//            }
+//        });
+//
+//        txtCaoNhat.setText("Max");
+//        txtCaoNhat.addFocusListener(new FocusListener() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                if (txtCaoNhat.getText().equals("Max")) {
+//                    txtCaoNhat.setText(null);
+//                }
+//            }
+//
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                if (txtCaoNhat.getText().isEmpty()) {
+//                    txtCaoNhat.setText("Max");
+//                }
+//            }
+//        });
+//    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -606,7 +608,8 @@ public class Form_SanPham extends javax.swing.JPanel {
         btnHinhAnh = new javax.swing.JButton();
         jLabel21 = new javax.swing.JLabel();
         cbbFilter_HD = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnFilter = new javax.swing.JButton();
+        btnCancelFilter = new javax.swing.JButton();
 
         btnThuongHieu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/adds.png"))); // NOI18N
         btnThuongHieu1.addActionListener(new java.awt.event.ActionListener() {
@@ -826,11 +829,19 @@ public class Form_SanPham extends javax.swing.JPanel {
 
         jLabel21.setText("Hình dạng:");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Filters.png"))); // NOI18N
-        jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Filters.png"))); // NOI18N
+        btnFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        btnFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnFilterActionPerformed(evt);
+            }
+        });
+
+        btnCancelFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Cancel.png"))); // NOI18N
+        btnCancelFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        btnCancelFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelFilterActionPerformed(evt);
             }
         });
 
@@ -889,16 +900,6 @@ public class Form_SanPham extends javax.swing.JPanel {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSearch)
-                                .addGap(71, 71, 71)
-                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtThapNhat, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -912,7 +913,7 @@ public class Form_SanPham extends javax.swing.JPanel {
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbbFilter_CL, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -939,13 +940,11 @@ public class Form_SanPham extends javax.swing.JPanel {
                                             .addComponent(jLabel9)
                                             .addComponent(jLabel20))
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel21)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cbbFilter_HD, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
-                                                .addComponent(jButton1))
+                                                .addComponent(cbbFilter_HD, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                     .addComponent(cbbThuongHieu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -955,7 +954,22 @@ public class Form_SanPham extends javax.swing.JPanel {
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(btnAddDanhMuc, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(btnThuongHieu, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(btnPhanLoai, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))))))))
+                                                    .addComponent(btnPhanLoai, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSearch)
+                                .addGap(71, 71, 71)
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnFilter)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnCancelFilter))
+                                    .addComponent(btnMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1053,28 +1067,31 @@ public class Form_SanPham extends javax.swing.JPanel {
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cbbFilter_CL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel13)
-                        .addComponent(jLabel21)
-                        .addComponent(cbbFilter_HD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(txtThapNhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtCaoNhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel12)
-                        .addComponent(cbbFilter_Mau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnFirstPages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBackPages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnLastPages)
-                        .addComponent(btnNextPages))
-                    .addComponent(lblPages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbbFilter_CL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel13)
+                                .addComponent(jLabel21)
+                                .addComponent(cbbFilter_HD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnFilter))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel4)
+                                .addComponent(txtThapNhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtCaoNhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel12)
+                                .addComponent(cbbFilter_Mau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnFirstPages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnBackPages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnLastPages)
+                                .addComponent(btnNextPages))
+                            .addComponent(lblPages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnCancelFilter))
                 .addContainerGap())
         );
 
@@ -1203,12 +1220,18 @@ public class Form_SanPham extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnHinhAnhActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
         // TODO add your handling code here:
         this.canExecute = 1;
         this.filter();
         this.firstPage();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnFilterActionPerformed
+
+    private void btnCancelFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelFilterActionPerformed
+        // TODO add your handling code here:
+        this.canExecute = 0; 
+        this.fillTable();
+    }//GEN-LAST:event_btnCancelFilterActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1216,6 +1239,8 @@ public class Form_SanPham extends javax.swing.JPanel {
     private javax.swing.JButton btnAddChatLieu;
     private javax.swing.JButton btnAddDanhMuc;
     private javax.swing.JButton btnBackPages;
+    private javax.swing.JButton btnCancelFilter;
+    private javax.swing.JButton btnFilter;
     private javax.swing.JButton btnFirstPages;
     private javax.swing.JButton btnHinhAnh;
     private javax.swing.JButton btnHinhDang;
@@ -1238,7 +1263,6 @@ public class Form_SanPham extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cbbPhanLoai;
     private javax.swing.JComboBox<String> cbbThuongHieu;
     private javax.swing.JComboBox<String> cbbTrangThai;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

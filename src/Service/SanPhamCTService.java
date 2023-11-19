@@ -257,7 +257,7 @@ public class SanPhamCTService {
                 (pages - 1) * limit, limit);
     }
 
-    public List<SanPhamCT> FilterPage(Integer giaMin, Integer giaMax, String mau) {
+    public List<SanPhamCT> FilterPage(Integer giaMin, Integer giaMax, String mau, String chatLieu, String hinhDang) {
         String sql = """
                           SELECT 
                             spct.ID, 
@@ -285,12 +285,17 @@ public class SanPhamCTService {
                          WHERE 
                               (spct.gia BETWEEN COALESCE(?, spct.gia) AND COALESCE(?, spct.gia))
                               and ms.ten_mau like ?
+                              and cl.chat_lieu like ?
+                              and hd.kieu_dang like ?
                      """;
         return this.selectBySql(sql,
-                giaMin, giaMax, "%" + mau + "%");
+                giaMin, giaMax,
+                "%" + mau + "%",
+                "%" + chatLieu + "%",
+                "%" + hinhDang + "%");
     }
 
-    public List<SanPhamCT> FilterData(Integer giaMin, Integer giaMax, String mau, int pages, int limit) {
+    public List<SanPhamCT> FilterData(Integer giaMin, Integer giaMax, String mau, String chatLieu, String hinhDang, int pages, int limit) {
         String sql = """
                      SELECT * 
                      FROM 
@@ -321,12 +326,17 @@ public class SanPhamCTService {
                          WHERE 
                               spct.gia BETWEEN ISNULL (?, spct.gia) AND  ISNULL (?, spct.gia)
                               and ms.ten_mau like ?
+                              and cl.chat_lieu like ?
+                              and hd.kieu_dang like ?
                      ) AS FilteredResults
                      ORDER BY ID
                      OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
                      """;
         return this.selectBySql(sql,
-                giaMin, giaMax, "%" + mau + "%",
+                giaMin, giaMax,
+                "%" + mau + "%",
+                "%" + chatLieu + "%",
+                "%" + hinhDang + "%",
                 (pages - 1) * limit, limit);
     }
 }
