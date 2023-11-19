@@ -4,12 +4,10 @@
  */
 package view;
 
-import Service.DanhMucService;
 import Service.PhanLoaiService;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.DanhMuc;
 import model.PhanLoai;
 
 public class PhanLoaijDialog extends javax.swing.JDialog {

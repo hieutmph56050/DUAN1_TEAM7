@@ -245,6 +245,9 @@ private int check;
             }
         }).start();
 
+        if (Auth.user == null) {
+            System.exit(0);
+        }
         lblMaNV.setText(Auth.user.getTaiKhoan());
         lblTenNV.setText(Auth.user.getTen());
         lblVaiTro.setText(Auth.user.loadVaiTro());

@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import model.ChatLieu;
 import model.DanhMuc;
 import model.PhanLoai;
+import model.SanPhamCT;
 import model.ThuongHieu;
 
 /**
@@ -93,13 +94,13 @@ public class SanPhamService {
                             dm.ten_danh_muc as DanhMuc,
                             pl.phan_loai as PhanLoai,
                             cl.chat_lieu as ChatLieu
-                      FROM
-                            dbo.SanPham sp
-                        INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                        INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                        INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                        INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID;
-                   WHERE  sp.ID ?
+                        FROM
+                              dbo.SanPham sp
+                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
+                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
+                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
+                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
+                         WHERE  sp.ID = ?
                         """;
         List<SanPham> list = this.selectBySql(selectById, id);
         if (list == null) {
@@ -177,4 +178,70 @@ public class SanPhamService {
         return this.selectBySql(sql, "%" + ma + "%");
     }
 
+    public List<SanPham> selectByKeyWord(String keyword) {
+        String sql = """
+                            SELECT
+                                sp.ID,
+                                sp.ma_san_pham,
+                                sp.ten,
+                                sp.ngay_tao,
+                                sp.ngay_sua,
+                                th.ten_thuong_hieu as ThuongHieu,
+                                dm.ten_danh_muc as DanhMuc,
+                                pl.phan_loai as PhanLoai,
+                                cl.chat_lieu as ChatLieu
+                            FROM
+                                dbo.SanPham sp
+                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
+                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
+                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
+                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
+                     WHERE sp.ten LIKE ?
+                            OR dm.ten_danh_muc LIKE ? 
+                            OR th.ten_thuong_hieu LIKE ?
+                            OR sp.ma_san_pham LIKE ?
+                     """;
+        return this.selectBySql(sql,
+                "%" + keyword + "%%",
+                "%" + keyword + "%%",
+                "%" + keyword + "%%",
+                "%" + keyword + "%%");
+    }
+
+    public List<SanPham> searchKeyWord(String keyWord, int pages, int limit) {
+        String sql = """
+                     SELECT * 
+                     FROM 
+                     (
+                         SELECT
+                                sp.ID,
+                                sp.ma_san_pham,
+                                sp.ten,
+                                sp.ngay_tao,
+                                sp.ngay_sua,
+                                th.ten_thuong_hieu as ThuongHieu,
+                                dm.ten_danh_muc as DanhMuc,
+                                pl.phan_loai as PhanLoai,
+                                cl.chat_lieu as ChatLieu
+                            FROM
+                                dbo.SanPham sp
+                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
+                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
+                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
+                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
+                     WHERE sp.ten LIKE ?
+                            OR dm.ten_danh_muc LIKE ? 
+                            OR th.ten_thuong_hieu LIKE ?
+                            OR sp.ma_san_pham LIKE ?
+                     ) AS FilteredResults
+                     ORDER BY ID
+                     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                     """;
+        return this.selectBySql(sql,
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%",
+                (pages - 1) * limit, limit);
+    }
 }

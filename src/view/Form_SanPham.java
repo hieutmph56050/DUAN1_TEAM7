@@ -33,8 +33,6 @@ import Service.PhanLoaiService;
 import Service.SanPhamCTService;
 import Service.SanPhamService;
 import Service.ThuongHieuService;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 public class Form_SanPham extends javax.swing.JPanel {
 
@@ -548,7 +546,6 @@ public class Form_SanPham extends javax.swing.JPanel {
 //            }
 //        });
 //    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -610,6 +607,8 @@ public class Form_SanPham extends javax.swing.JPanel {
         cbbFilter_HD = new javax.swing.JComboBox<>();
         btnFilter = new javax.swing.JButton();
         btnCancelFilter = new javax.swing.JButton();
+        btnThuocTinh = new javax.swing.JButton();
+        btnSanPham = new javax.swing.JButton();
 
         btnThuongHieu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/adds.png"))); // NOI18N
         btnThuongHieu1.addActionListener(new java.awt.event.ActionListener() {
@@ -845,40 +844,51 @@ public class Form_SanPham extends javax.swing.JPanel {
             }
         });
 
+        btnThuocTinh.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        btnThuocTinh.setText("Thuộc tính");
+        btnThuocTinh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThuocTinhActionPerformed(evt);
+            }
+        });
+
+        btnSanPham.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        btnSanPham.setText("Sản phẩm");
+        btnSanPham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSanPhamActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(377, 377, 377)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel19))
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtMaSP, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                .addComponent(txtTenSP, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                .addComponent(txtGia, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                .addComponent(txtSoLuong, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                .addComponent(cbbTrangThai, 0, 219, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel17)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jLabel19))
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtMaSP, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                        .addComponent(txtTenSP, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                        .addComponent(txtGia, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                        .addComponent(txtSoLuong, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                        .addComponent(cbbTrangThai, 0, 219, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(cbbHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(cbbHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(0, 620, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -969,15 +979,25 @@ public class Form_SanPham extends javax.swing.JPanel {
                                         .addComponent(btnFilter)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btnCancelFilter))
-                                    .addComponent(btnMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(btnMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(216, 216, 216)
+                        .addComponent(btnSanPham)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnThuocTinh)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jLabel1)
-                .addGap(20, 20, 20)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnThuocTinh)
+                    .addComponent(btnSanPham))
+                .addGap(17, 17, 17)
                 .addComponent(jLabel11)
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1069,12 +1089,12 @@ public class Form_SanPham extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFilter)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(cbbFilter_CL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel13)
                                 .addComponent(jLabel21)
-                                .addComponent(cbbFilter_HD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnFilter))
+                                .addComponent(cbbFilter_HD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel4)
                                 .addComponent(txtThapNhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1143,10 +1163,13 @@ public class Form_SanPham extends javax.swing.JPanel {
     private void btnHinhDangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHinhDangActionPerformed
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
+            List<HinhDang> listDau = hdService.selectAll();
             new HinhDangJDialog(frame, true).setVisible(true);
             this.fillCbbHinhDang();
-            List<HinhDang> listCbb = hdService.selectAll();
-            cbbHinhDang.setSelectedIndex(listCbb.size() - 1);
+            List<HinhDang> listSau = hdService.selectAll();
+            if (listSau.size() > listDau.size()) {
+                cbbHinhDang.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnHinhDangActionPerformed
 
@@ -1154,10 +1177,13 @@ public class Form_SanPham extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
+            List<ThuongHieu> listDau = thService.selectAll();
             new ThuongHieuJDialog(frame, true).setVisible(true);
             this.fillCbbThuongHieu();
-            List<ThuongHieu> listCbb = thService.selectAll();
-            cbbThuongHieu.setSelectedIndex(listCbb.size() - 1);
+            List<ThuongHieu> listSau = thService.selectAll();
+            if (listSau.size() > listDau.size()) {
+                cbbThuongHieu.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnThuongHieuActionPerformed
 
@@ -1165,10 +1191,13 @@ public class Form_SanPham extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
-            new ChatLieuJDialog(frame, true).setVisible(true);
-            this.fillCbbChatLieu();
-            List<ChatLieu> listCbb = clService.selectAll();
-            cbbChatLieu.setSelectedIndex(listCbb.size() - 1);
+            List<ChatLieu> listDau = clService.selectAll();
+            new ThuongHieuJDialog(frame, true).setVisible(true);
+            this.fillCbbThuongHieu();
+            List<ChatLieu> listSau = clService.selectAll();
+            if (listSau.size() > listDau.size()) {
+                cbbChatLieu.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnAddChatLieuActionPerformed
 
@@ -1176,10 +1205,13 @@ public class Form_SanPham extends javax.swing.JPanel {
 
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
+            List<MauSac> listDau = msService.selectAll();
             new MauSacJDialog(frame, true).setVisible(true);
             this.fillCbbMauSac();
-            List<MauSac> listCbb = msService.selectAll();
-            cbbMauSac.setSelectedIndex(listCbb.size() - 1);
+            List<MauSac> listSau = msService.selectAll();
+            if (listSau.size() > listDau.size()) {
+                cbbMauSac.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnMauSacActionPerformed
 
@@ -1187,10 +1219,13 @@ public class Form_SanPham extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
+            List<DanhMuc> listBanDau = dmService.selectAll();
             new DanhMucJDialog(frame, true).setVisible(true);
             this.fillCbbDanhMuc();
-            List<DanhMuc> listCbb = dmService.selectAll();
-            cbbDanhMuc.setSelectedIndex(listCbb.size() - 1);
+            List<DanhMuc> listSau = dmService.selectAll();
+            if (listSau.size() > listBanDau.size()) {
+                cbbDanhMuc.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnAddDanhMucActionPerformed
 
@@ -1202,10 +1237,13 @@ public class Form_SanPham extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
-            new PhanLoaijDialog(frame, true).setVisible(true);
-            this.fillCbbPhanLoai();
-            List<PhanLoai> listCbb = plService.selectAll();
-            cbbPhanLoai.setSelectedIndex(listCbb.size() - 1);
+            List<PhanLoai> listDau = plService.selectAll();
+            new ThuongHieuJDialog(frame, true).setVisible(true);
+            this.fillCbbThuongHieu();
+            List<PhanLoai> listSau = plService.selectAll();
+            if (listSau.size() > listDau.size()) {
+                cbbPhanLoai.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnPhanLoaiActionPerformed
 
@@ -1213,10 +1251,13 @@ public class Form_SanPham extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         if (frame != null) {
+            List<HinhAnh> listDau = haService.selectAll();
             new HinhAnhJDialog(frame, true).setVisible(true);
             this.fillCbbHinhAnh();
-            List<HinhAnh> listCbb = haService.selectAll();
-            cbbHinhAnh.setSelectedIndex(listCbb.size() - 1);
+            List<HinhAnh> listSau = haService.selectAll();
+            if (listSau.size() > listDau.size()) {
+                cbbHinhAnh.setSelectedIndex(listSau.size() - 1);
+            }
         }
     }//GEN-LAST:event_btnHinhAnhActionPerformed
 
@@ -1229,9 +1270,25 @@ public class Form_SanPham extends javax.swing.JPanel {
 
     private void btnCancelFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelFilterActionPerformed
         // TODO add your handling code here:
-        this.canExecute = 0; 
+        this.canExecute = 0;
         this.fillTable();
     }//GEN-LAST:event_btnCancelFilterActionPerformed
+
+    private void btnSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSanPhamActionPerformed
+        // TODO add your handling code here:
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) {
+            new QL_SanPham(frame, true).setVisible(true);
+        }
+    }//GEN-LAST:event_btnSanPhamActionPerformed
+
+    private void btnThuocTinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThuocTinhActionPerformed
+        // TODO add your handling code here:
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) {
+            new QL_ThuocTinh(frame, true).setVisible(true);
+        }
+    }//GEN-LAST:event_btnThuocTinhActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1249,6 +1306,8 @@ public class Form_SanPham extends javax.swing.JPanel {
     private javax.swing.JButton btnMoi;
     private javax.swing.JButton btnNextPages;
     private javax.swing.JButton btnPhanLoai;
+    private javax.swing.JButton btnSanPham;
+    private javax.swing.JButton btnThuocTinh;
     private javax.swing.JButton btnThuongHieu;
     private javax.swing.JButton btnThuongHieu1;
     private javax.swing.JButton btnUpdate;
