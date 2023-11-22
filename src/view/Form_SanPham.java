@@ -33,6 +33,9 @@ import Service.PhanLoaiService;
 import Service.SanPhamCTService;
 import Service.SanPhamService;
 import Service.ThuongHieuService;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import repository.Validated;
 
 public class Form_SanPham extends javax.swing.JPanel {
 
@@ -67,7 +70,6 @@ public class Form_SanPham extends javax.swing.JPanel {
         this.fillCbbPhanLoai();
         this.fillCbbHinhAnh();
         this.loadMa();
-//        this.loadTitleText();
         this.fillCbbChatLieuFilter();
         this.fillCbbHinhDangFilter();
         this.fillCbbMauSacFilter();
@@ -302,7 +304,7 @@ public class Form_SanPham extends javax.swing.JPanel {
     private void fillCbbMauSacFilter() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cbbFilter_Mau.getModel();
         model.removeAllElements();
-
+        model.addElement("");
         List<MauSac> listCbb = msService.selectAll();
         for (MauSac mauSac : listCbb) {
             model.addElement(mauSac.getTen());
@@ -312,7 +314,7 @@ public class Form_SanPham extends javax.swing.JPanel {
     private void fillCbbChatLieuFilter() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cbbFilter_CL.getModel();
         model.removeAllElements();
-
+        model.addElement("");
         List<ChatLieu> listCbb = clService.selectAll();
         for (ChatLieu chatLieu : listCbb) {
             model.addElement(chatLieu.getTen());
@@ -322,7 +324,7 @@ public class Form_SanPham extends javax.swing.JPanel {
     private void fillCbbHinhDangFilter() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cbbFilter_HD.getModel();
         model.removeAllElements();
-
+        model.addElement("");
         List<HinhDang> listCbb = hdService.selectAll();
         for (HinhDang hd : listCbb) {
             model.addElement(hd.getTen());
@@ -403,6 +405,19 @@ public class Form_SanPham extends javax.swing.JPanel {
     private SanPhamCT getDataForm_spct(List<SanPham> list) {
         SanPhamCT spct = new SanPhamCT();
 
+        if (!Validated.checkEmpty(txtMaSP.getText(), txtTenSP.getText(),
+                txtGia.getText(), txtSoLuong.getText())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng không để trống form!");
+            return null;
+        }
+        if (!Validated.isNumericInt(txtSoLuong.getText())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập lại số lượng!");
+            return null;
+        }
+        if (!Validated.isNumericDouble(txtGia.getText())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập lại giá!");
+            return null;
+        }
         for (SanPham sanPham : list) {
             if (txtMaSP.getText().equalsIgnoreCase(sanPham.getMa())) {
                 spct.setId_sanPham(sanPham.getId());
@@ -410,12 +425,18 @@ public class Form_SanPham extends javax.swing.JPanel {
         }
         spct.setGia(Integer.valueOf(txtGia.getText()));
         spct.setSoLuong(Integer.valueOf(txtSoLuong.getText()));
+        Integer sl = Integer.parseInt(txtSoLuong.getText());
         String status = (String) cbbTrangThai.getSelectedItem();
         Integer trangThai;
         if (status.equals("Đang bán")) {
             trangThai = 1;
         } else {
             trangThai = 2;
+        }
+        if (sl == 0) {
+            trangThai = 2;
+        } else {
+            trangThai = 1;
         }
         spct.setTrangThai(trangThai);
         HinhAnh ha = (HinhAnh) cbbHinhAnh.getSelectedItem();
@@ -431,6 +452,11 @@ public class Form_SanPham extends javax.swing.JPanel {
     private SanPham getData_SP() {
         SanPham sp = new SanPham();
 
+        if (!Validated.checkEmpty(txtMaSP.getText(), txtTenSP.getText(),
+                txtGia.getText(), txtSoLuong.getText())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng không để trống form!");
+            return null;
+        }
         sp.setMa(txtMaSP.getText());
         sp.setTen(txtTenSP.getText());
         Date currentDate = new Date();
@@ -454,6 +480,9 @@ public class Form_SanPham extends javax.swing.JPanel {
         }
         List<SanPham> listSP = spService.selectAll();
         SanPhamCT spct = this.getDataForm_spct(listSP);
+        if (spct == null) {
+            return;
+        }
         Integer id = (Integer) tblSanPhamCT.getValueAt(row, 0);
         spct.setId(id);
         try {
@@ -486,6 +515,9 @@ public class Form_SanPham extends javax.swing.JPanel {
                 List<SanPham> listSP = spService.selectAll();
                 SanPhamCT spct = this.getDataForm_spct(listSP);
                 try {
+                    if (spct == null) {
+                        return;
+                    }
                     service.insert(spct);
                     this.fillTable();
                     this.clean();
@@ -499,9 +531,15 @@ public class Form_SanPham extends javax.swing.JPanel {
 
         try {
             SanPham sp = this.getData_SP();
+            if (sp == null) {
+                return;
+            }
             spService.insert(sp);
             List<SanPham> listSP = spService.selectAll();
             SanPhamCT spct = this.getDataForm_spct(listSP);
+            if (spct == null) {
+                return;
+            }
             service.insert(spct);
             this.fillTable();
             this.clean();
@@ -517,7 +555,7 @@ public class Form_SanPham extends javax.swing.JPanel {
 //            @Override
 //            public void focusGained(FocusEvent e) {
 //                if (txtThapNhat.getText().equals("Min")) {
-//                    txtThapNhat.setText(null);
+//                    txtThapNhat.setText("");
 //                }
 //            }
 //
@@ -534,7 +572,7 @@ public class Form_SanPham extends javax.swing.JPanel {
 //            @Override
 //            public void focusGained(FocusEvent e) {
 //                if (txtCaoNhat.getText().equals("Max")) {
-//                    txtCaoNhat.setText(null);
+//                    txtCaoNhat.setText("");
 //                }
 //            }
 //
@@ -727,6 +765,7 @@ public class Form_SanPham extends javax.swing.JPanel {
             }
         });
 
+        btnAdd.setBackground(new java.awt.Color(148, 187, 233));
         btnAdd.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Add.png"))); // NOI18N
         btnAdd.setText("Thêm");
@@ -737,6 +776,7 @@ public class Form_SanPham extends javax.swing.JPanel {
             }
         });
 
+        btnUpdate.setBackground(new java.awt.Color(148, 187, 233));
         btnUpdate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Update.png"))); // NOI18N
         btnUpdate.setText("Sửa");
@@ -747,6 +787,7 @@ public class Form_SanPham extends javax.swing.JPanel {
             }
         });
 
+        btnMoi.setBackground(new java.awt.Color(148, 187, 233));
         btnMoi.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnMoi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Clean.png"))); // NOI18N
         btnMoi.setText("Mới");
@@ -828,6 +869,7 @@ public class Form_SanPham extends javax.swing.JPanel {
 
         jLabel21.setText("Hình dạng:");
 
+        btnFilter.setBackground(new java.awt.Color(148, 187, 233));
         btnFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Filters.png"))); // NOI18N
         btnFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         btnFilter.addActionListener(new java.awt.event.ActionListener() {
@@ -836,6 +878,7 @@ public class Form_SanPham extends javax.swing.JPanel {
             }
         });
 
+        btnCancelFilter.setBackground(new java.awt.Color(148, 187, 233));
         btnCancelFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Cancel.png"))); // NOI18N
         btnCancelFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         btnCancelFilter.addActionListener(new java.awt.event.ActionListener() {

@@ -25,6 +25,8 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void selected(int index) {
                 switch (index) {
+                    case 0 ->
+                        setForm(new Form_Home());
                     case 1 ->
                         setForm(new Form_SanPham());
                     case 10 ->
@@ -36,7 +38,7 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         });
-        setForm(new Form_SanPham());
+        setForm(new Form_Home());
     }
 
     private void setForm(JComponent com) {
