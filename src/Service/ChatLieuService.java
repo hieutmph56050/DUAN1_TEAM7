@@ -60,6 +60,17 @@ public class ChatLieuService {
         return list.get(0);
     }
 
+    public ChatLieu selectByTen(String ten) {
+        String selectById = """
+                        select * from ChatLieu where chat_lieu like ?
+                        """;
+        List<ChatLieu> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<ChatLieu> selectBySql(String sql, Object... args) {
         List<ChatLieu> list = new ArrayList<>();
         try {

@@ -28,7 +28,7 @@ public class Main extends javax.swing.JFrame {
                     case 0 ->
                         setForm(new Form_Home());
                     case 1 ->
-                        setForm(new Form_SanPham());
+                        setForm(new Form_QlSanPham());
                     case 10 ->
                         logout();
                     case 11 ->

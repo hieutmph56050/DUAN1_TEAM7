@@ -56,6 +56,17 @@ public class HinhDangService {
         return list.get(0);
     }
 
+    public HinhDang selectByTen(String ten) {
+        String selectById = """
+                        select * from HinhDang where kieu_dang like ?
+                        """;
+        List<HinhDang> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<HinhDang> selectBySql(String sql, Object... args) {
         List<HinhDang> list = new ArrayList<>();
         try {

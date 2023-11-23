@@ -60,6 +60,17 @@ public class DanhMucService {
         return list.get(0);
     }
 
+    public DanhMuc selectByTen(String ten) {
+        String selectById = """
+                        select * from DanhMuc where ten_danh_muc like ?
+                        """;
+        List<DanhMuc> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<DanhMuc> selectBySql(String sql, Object... args) {
         List<DanhMuc> list = new ArrayList<>();
         try {

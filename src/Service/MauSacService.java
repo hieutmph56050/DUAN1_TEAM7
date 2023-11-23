@@ -60,6 +60,17 @@ public class MauSacService {
         return list.get(0);
     }
 
+    public MauSac selectByTen(String ten) {
+        String selectById = """
+                        select * from MauSac where ten_mau like ?
+                        """;
+        List<MauSac> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<MauSac> selectBySql(String sql, Object... args) {
         List<MauSac> list = new ArrayList<>();
         try {

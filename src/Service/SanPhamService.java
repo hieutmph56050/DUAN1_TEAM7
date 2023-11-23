@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import model.ChatLieu;
 import model.DanhMuc;
 import model.PhanLoai;
-import model.SanPhamCT;
 import model.ThuongHieu;
 
 /**
@@ -52,7 +51,6 @@ public class SanPhamService {
                         UPDATE [dbo].[SanPham]
                                  SET [ma_san_pham] = ?
                                     ,[ten] = ?
-                                    ,[ngay_tao] = ?
                                     ,[ngay_sua] = ?
                                     ,[danh_muc_id] = ?
                                     ,[thuong_hieu_id] = ?
@@ -64,7 +62,6 @@ public class SanPhamService {
         JdbcHelper.update(sql,
                 entity.getMa(),
                 entity.getTen(),
-                entity.getNgayThem(),
                 entity.getNgaySua(),
                 entity.getId_dm(),
                 entity.getId_th(),
@@ -155,7 +152,7 @@ public class SanPhamService {
         return this.selectBySql(selectAll);
     }
 
-    public List<SanPham> selectByMa(String ma) {
+    public SanPham selectByMa(String ma) {
         String sql = """
               SELECT
                         sp.ID,
@@ -172,10 +169,14 @@ public class SanPhamService {
                     INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
                     INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
                     INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                    INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID;
+                    INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                WHERE  sp.ma_san_pham LIKE ?
                    """;
-        return this.selectBySql(sql, "%" + ma + "%");
+        List<SanPham> list = this.selectBySql(sql, "%" + ma + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
     }
 
     public List<SanPham> selectByKeyWord(String keyword) {
@@ -196,14 +197,9 @@ public class SanPhamService {
                             INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
                             INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
                             INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
-                     WHERE sp.ten LIKE ?
-                            OR dm.ten_danh_muc LIKE ? 
-                            OR th.ten_thuong_hieu LIKE ?
-                            OR sp.ma_san_pham LIKE ?
+                     WHERE sp.ten LIKE ? OR sp.ma_san_pham LIKE ?
                      """;
         return this.selectBySql(sql,
-                "%" + keyword + "%%",
-                "%" + keyword + "%%",
                 "%" + keyword + "%%",
                 "%" + keyword + "%%");
     }
@@ -229,10 +225,7 @@ public class SanPhamService {
                             INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
                             INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
                             INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
-                     WHERE sp.ten LIKE ?
-                            OR dm.ten_danh_muc LIKE ? 
-                            OR th.ten_thuong_hieu LIKE ?
-                            OR sp.ma_san_pham LIKE ?
+                     WHERE sp.ten LIKE ? OR sp.ma_san_pham LIKE ?
                      ) AS FilteredResults
                      ORDER BY ID
                      OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -240,8 +233,69 @@ public class SanPhamService {
         return this.selectBySql(sql,
                 "%" + keyWord + "%%",
                 "%" + keyWord + "%%",
-                "%" + keyWord + "%%",
-                "%" + keyWord + "%%",
+                (pages - 1) * limit, limit);
+    }
+
+    public List<SanPham> selectPagesFilter(String danhMuc, String thuongHieu, String chatLieu) {
+        String sql = """
+                            SELECT
+                                sp.ID,
+                                sp.ma_san_pham,
+                                sp.ten,
+                                sp.ngay_tao,
+                                sp.ngay_sua,
+                                th.ten_thuong_hieu as ThuongHieu,
+                                dm.ten_danh_muc as DanhMuc,
+                                pl.phan_loai as PhanLoai,
+                                cl.chat_lieu as ChatLieu
+                            FROM
+                                dbo.SanPham sp
+                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
+                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
+                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
+                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
+                     WHERE dm.ten_danh_muc LIKE ? 
+                            AND th.ten_thuong_hieu LIKE ?
+                            AND cl.chat_lieu like ?
+                     """;
+        return this.selectBySql(sql,
+                "%" + danhMuc,
+                "%" + thuongHieu,
+                "%" + chatLieu);
+    }
+
+    public List<SanPham> Filter(String danhMuc, String thuongHieu, String chatLieu, int pages, int limit) {
+        String sql = """
+                     SELECT * 
+                     FROM 
+                     (
+                         SELECT
+                                sp.ID,
+                                sp.ma_san_pham,
+                                sp.ten,
+                                sp.ngay_tao,
+                                sp.ngay_sua,
+                                th.ten_thuong_hieu as ThuongHieu,
+                                dm.ten_danh_muc as DanhMuc,
+                                pl.phan_loai as PhanLoai,
+                                cl.chat_lieu as ChatLieu
+                            FROM
+                                dbo.SanPham sp
+                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
+                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
+                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
+                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
+                     WHERE dm.ten_danh_muc LIKE ? 
+                            AND th.ten_thuong_hieu LIKE ?
+                            AND cl.chat_lieu like ?
+                     ) AS FilteredResults
+                     ORDER BY ID
+                     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                     """;
+        return this.selectBySql(sql,
+                "%" + danhMuc,
+                "%" + thuongHieu,
+                "%" + chatLieu,
                 (pages - 1) * limit, limit);
     }
 }

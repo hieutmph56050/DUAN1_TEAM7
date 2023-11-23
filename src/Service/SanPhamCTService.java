@@ -10,19 +10,11 @@ import java.util.List;
 import model.SanPhamCT;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import model.ChatLieu;
-import model.DanhMuc;
 import model.HinhAnh;
 import model.HinhDang;
 import model.MauSac;
-import model.PhanLoai;
 import model.SanPham;
-import model.ThuongHieu;
 
-/**
- *
- * @author ledin
- */
 public class SanPhamCTService {
 
     public void insert(SanPhamCT entity) {
@@ -73,15 +65,6 @@ public class SanPhamCTService {
         );
     }
 
-    public void delete(Integer id) {
-        String sql = """
-                     DELETE FROM [dbo].[SPCT]
-                           WHERE ID = ?
-                     """;
-
-        JdbcHelper.update(sql, id);
-    }
-
     public SanPhamCT selectById(Integer id) {
         String sql = """
                     SELECT 
@@ -90,20 +73,12 @@ public class SanPhamCTService {
                             sp.ten, 
                             spct.gia, 
                             spct.so_luong,
-                            dm.ten_danh_muc as DanhMuc,
-                            pl.phan_loai as PhanLoai, 
-                            cl.chat_lieu as ChatLieu, 
-                            th.ten_thuong_hieu as ThuongHieu, 
                             ms.ten_mau as MauSac, 
                             hd.kieu_dang as HinhDang, 
                             anh.link as HinhAnh, 
                             spct.trang_thai
                         FROM dbo.SPCT spct
                         INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
-                        INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                        INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                        INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                        INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                         INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                         INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                         INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
@@ -116,6 +91,28 @@ public class SanPhamCTService {
         return list.get(0);
     }
 
+    public List<SanPhamCT> selectByMa(String ma) {
+        String sql = """
+                    SELECT 
+                            spct.ID, 
+                            sp.ma_san_pham,
+                            sp.ten, 
+                            spct.gia, 
+                            spct.so_luong,
+                            ms.ten_mau as MauSac, 
+                            hd.kieu_dang as HinhDang, 
+                            anh.link as HinhAnh, 
+                            spct.trang_thai
+                        FROM dbo.SPCT spct
+                        INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
+                        INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
+                        INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
+                        INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
+                     WHERE sp.ma_san_pham like ?
+                     """;
+        return this.selectBySql(sql, "%" + ma + "%");
+    }
+
     public List<SanPhamCT> selectAll() {
         String sql = """
                     SELECT 
@@ -124,20 +121,12 @@ public class SanPhamCTService {
                             sp.ten, 
                             spct.gia, 
                             spct.so_luong,
-                            dm.ten_danh_muc as DanhMuc,
-                            pl.phan_loai as PhanLoai, 
-                            cl.chat_lieu as ChatLieu, 
-                            th.ten_thuong_hieu as ThuongHieu, 
                             ms.ten_mau as MauSac, 
                             hd.kieu_dang as HinhDang, 
                             anh.link as HinhAnh, 
                             spct.trang_thai
                         FROM dbo.SPCT spct
                         INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
-                        INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                        INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                        INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                        INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                         INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                         INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                         INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
@@ -157,11 +146,7 @@ public class SanPhamCTService {
                 spct.setSoLuong(rs.getInt("so_luong"));
                 spct.setTrangThai(rs.getInt("trang_thai"));
                 spct.setSanPham(new SanPham(rs.getString("ma_san_pham"),
-                        rs.getString("ten"),
-                        new ThuongHieu(rs.getString("ThuongHieu")),
-                        new DanhMuc(rs.getString("DanhMuc")),
-                        new ChatLieu(rs.getString("ChatLieu")),
-                        new PhanLoai(rs.getString("PhanLoai"))
+                        rs.getString("ten")
                 ));
                 spct.setHinhDang(new HinhDang(rs.getString("HinhDang")));
                 spct.setMauSac(new MauSac(rs.getString("MauSac")));
@@ -176,7 +161,7 @@ public class SanPhamCTService {
         }
     }
 
-    public List<SanPhamCT> selectByKeyWord(String keyword) {
+    public List<SanPhamCT> selectByKeyWord(String keyword, String maSP) {
         String sql = """
                             SELECT 
                                 spct.ID, 
@@ -184,36 +169,25 @@ public class SanPhamCTService {
                                 sp.ten, 
                                 spct.gia, 
                                 spct.so_luong,
-                                dm.ten_danh_muc as DanhMuc,
-                                pl.phan_loai as PhanLoai, 
-                                cl.chat_lieu as ChatLieu, 
-                                th.ten_thuong_hieu as ThuongHieu, 
                                 ms.ten_mau as MauSac, 
                                 hd.kieu_dang as HinhDang, 
                                 anh.link as HinhAnh, 
                                 spct.trang_thai
                             FROM dbo.SPCT spct
                             INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
-                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                             INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                             INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                             INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
-                     WHERE sp.ten LIKE ?
-                            OR dm.ten_danh_muc LIKE ? 
-                            OR th.ten_thuong_hieu LIKE ?
-                            OR sp.ma_san_pham LIKE ?
+                     WHERE (sp.ten LIKE ? OR sp.ma_san_pham LIKE ?)
+                            and sp.ma_san_pham like ?
                      """;
         return this.selectBySql(sql,
                 "%" + keyword + "%%",
                 "%" + keyword + "%%",
-                "%" + keyword + "%%",
-                "%" + keyword + "%%");
+                "%" + maSP + "%");
     }
 
-    public List<SanPhamCT> searchKeyWord(String keyWord, int pages, int limit) {
+    public List<SanPhamCT> searchKeyWord(String keyWord, String maSP, int pages, int limit) {
         String sql = """
                      SELECT * 
                      FROM 
@@ -224,27 +198,17 @@ public class SanPhamCTService {
                             sp.ten, 
                             spct.gia, 
                             spct.so_luong,
-                            dm.ten_danh_muc as DanhMuc,
-                            pl.phan_loai as PhanLoai, 
-                            cl.chat_lieu as ChatLieu, 
-                            th.ten_thuong_hieu as ThuongHieu, 
                             ms.ten_mau as MauSac, 
                             hd.kieu_dang as HinhDang, 
                             anh.link as HinhAnh, 
                             spct.trang_thai
                         FROM dbo.SPCT spct
                         INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
-                        INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                        INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                        INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                        INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                         INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                         INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                         INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
-                     WHERE sp.ten LIKE ? 
-                            OR dm.ten_danh_muc LIKE ? 
-                            OR th.ten_thuong_hieu LIKE ?
-                            OR sp.ma_san_pham LIKE ?
+                     WHERE (sp.ten LIKE ? OR sp.ma_san_pham LIKE ?)
+                            and sp.ma_san_pham like ?
                      ) AS FilteredResults
                      ORDER BY ID
                      OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -252,82 +216,65 @@ public class SanPhamCTService {
         return this.selectBySql(sql,
                 "%" + keyWord + "%%",
                 "%" + keyWord + "%%",
-                "%" + keyWord + "%%",
-                "%" + keyWord + "%%",
+                "%" + maSP + "%",
                 (pages - 1) * limit, limit);
     }
 
-    public List<SanPhamCT> FilterPage(Integer giaMin, Integer giaMax, String mau, String chatLieu, String hinhDang) {
+    public List<SanPhamCT> FilterPage(Integer giaMin, Integer giaMax, String mau, String hinhDang, String maSP) {
         String sql = """
                           SELECT 
-                            spct.ID, 
-                            sp.ma_san_pham,
-                            sp.ten, 
-                            spct.gia, 
-                            spct.so_luong,
-                            dm.ten_danh_muc as DanhMuc,
-                            pl.phan_loai as PhanLoai, 
-                            cl.chat_lieu as ChatLieu, 
-                            th.ten_thuong_hieu as ThuongHieu, 
-                            ms.ten_mau as MauSac, 
-                            hd.kieu_dang as HinhDang, 
-                            anh.link as HinhAnh, 
-                            spct.trang_thai
-                        FROM dbo.SPCT spct
+                                spct.ID, 
+                                sp.ma_san_pham,
+                                sp.ten, 
+                                spct.gia, 
+                                spct.so_luong,
+                                ms.ten_mau as MauSac, 
+                                hd.kieu_dang as HinhDang, 
+                                anh.link as HinhAnh, 
+                                spct.trang_thai
+                            FROM dbo.SPCT spct
                             INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
-                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                             INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                             INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                             INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
                          WHERE 
                               (spct.gia BETWEEN COALESCE(?, spct.gia) AND COALESCE(?, spct.gia))
                               and ms.ten_mau like ?
-                              and cl.chat_lieu like ?
                               and hd.kieu_dang like ?
+                              and sp.ma_san_pham like ?
                      """;
         return this.selectBySql(sql,
                 giaMin, giaMax,
                 "%" + mau + "%",
-                "%" + chatLieu + "%",
-                "%" + hinhDang + "%");
+                "%" + hinhDang + "%",
+                "%" + maSP + "%");
     }
 
-    public List<SanPhamCT> FilterData(Integer giaMin, Integer giaMax, String mau, String chatLieu, String hinhDang, int pages, int limit) {
+    public List<SanPhamCT> FilterData(Integer giaMin, Integer giaMax, String mau, String hinhDang, String maSP, int pages, int limit) {
         String sql = """
                      SELECT * 
                      FROM 
                      (
                         SELECT 
-                            spct.ID, 
-                            sp.ma_san_pham,
-                            sp.ten, 
-                            spct.gia, 
-                            spct.so_luong,
-                            dm.ten_danh_muc as DanhMuc,
-                            pl.phan_loai as PhanLoai, 
-                            cl.chat_lieu as ChatLieu, 
-                            th.ten_thuong_hieu as ThuongHieu, 
-                            ms.ten_mau as MauSac, 
-                            hd.kieu_dang as HinhDang, 
-                            anh.link as HinhAnh, 
-                            spct.trang_thai
-                        FROM dbo.SPCT spct
+                                spct.ID, 
+                                sp.ma_san_pham,
+                                sp.ten, 
+                                spct.gia, 
+                                spct.so_luong,
+                                ms.ten_mau as MauSac, 
+                                hd.kieu_dang as HinhDang, 
+                                anh.link as HinhAnh, 
+                                spct.trang_thai
+                            FROM dbo.SPCT spct
                             INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
-                            INNER JOIN dbo.DanhMuc dm ON sp.danh_muc_id = dm.ID
-                            INNER JOIN dbo.PhanLoai pl ON sp.phan_loai_id = pl.ID
-                            INNER JOIN dbo.ChatLieu cl ON sp.chat_lieu_id = cl.ID
-                            INNER JOIN dbo.ThuongHieu th ON sp.thuong_hieu_id = th.ID
                             INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                             INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                             INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
                          WHERE 
                               spct.gia BETWEEN ISNULL (?, spct.gia) AND  ISNULL (?, spct.gia)
                               and ms.ten_mau like ?
-                              and cl.chat_lieu like ?
                               and hd.kieu_dang like ?
+                              and sp.ma_san_pham like ?
                      ) AS FilteredResults
                      ORDER BY ID
                      OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -335,8 +282,8 @@ public class SanPhamCTService {
         return this.selectBySql(sql,
                 giaMin, giaMax,
                 "%" + mau + "%",
-                "%" + chatLieu + "%",
                 "%" + hinhDang + "%",
+                "%" + maSP + "%",
                 (pages - 1) * limit, limit);
     }
 }

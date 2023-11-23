@@ -60,6 +60,17 @@ public class ThuongHieuService {
         return list.get(0);
     }
 
+    public ThuongHieu selectByTen(String ten) {
+        String selectById = """
+                        select * from ThuongHieu where ten_thuong_hieu like ?
+                        """;
+        List<ThuongHieu> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<ThuongHieu> selectBySql(String sql, Object... args) {
         List<ThuongHieu> list = new ArrayList<>();
         try {

@@ -41,13 +41,9 @@ public class SanPham {
         this.phanLoai = phanLoai;
     }
 
-    public SanPham(String ma, String ten, ThuongHieu thuongHieu, DanhMuc danhMuc, ChatLieu chatLieu, PhanLoai phanLoai) {
+    public SanPham(String ma, String ten) {
         this.ma = ma;
         this.ten = ten;
-        this.thuongHieu = thuongHieu;
-        this.danhMuc = danhMuc;
-        this.chatLieu = chatLieu;
-        this.phanLoai = phanLoai;
     }
 
     public Integer getId() {

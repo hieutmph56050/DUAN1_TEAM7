@@ -56,6 +56,17 @@ public class HinhAnhService {
         return list.get(0);
     }
 
+    public HinhAnh selectByTen(String ten) {
+        String selectById = """
+                        select * from Anh where link like ?
+                        """;
+        List<HinhAnh> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<HinhAnh> selectBySql(String sql, Object... args) {
         List<HinhAnh> list = new ArrayList<>();
         try {

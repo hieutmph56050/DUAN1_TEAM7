@@ -56,6 +56,17 @@ public class PhanLoaiService {
         return list.get(0);
     }
 
+    public PhanLoai selectByTen(String ten) {
+        String selectById = """
+                        select * from PhanLoai where phan_loai like ?
+                        """;
+        List<PhanLoai> list = this.selectBySql(selectById, "%" + ten + "%");
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
+    }
+
     protected List<PhanLoai> selectBySql(String sql, Object... args) {
         List<PhanLoai> list = new ArrayList<>();
         try {
