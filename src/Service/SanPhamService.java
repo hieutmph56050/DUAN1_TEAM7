@@ -236,7 +236,7 @@ public class SanPhamService {
                 (pages - 1) * limit, limit);
     }
 
-    public List<SanPham> selectPagesFilter(String danhMuc, String thuongHieu, String chatLieu) {
+    public List<SanPham> selectPagesFilter(String danhMuc, String thuongHieu, String chatLieu, String keyword) {
         String sql = """
                             SELECT
                                 sp.ID,
@@ -257,14 +257,17 @@ public class SanPhamService {
                      WHERE dm.ten_danh_muc LIKE ? 
                             AND th.ten_thuong_hieu LIKE ?
                             AND cl.chat_lieu like ?
+                            AND (sp.ten LIKE ? OR sp.ma_san_pham LIKE ?)
                      """;
         return this.selectBySql(sql,
-                "%" + danhMuc,
-                "%" + thuongHieu,
-                "%" + chatLieu);
+                "%" + danhMuc + "%",
+                "%" + thuongHieu + "%",
+                "%" + chatLieu + "%",
+                "%" + keyword + "%%",
+                "%" + keyword + "%%");
     }
 
-    public List<SanPham> Filter(String danhMuc, String thuongHieu, String chatLieu, int pages, int limit) {
+    public List<SanPham> Filter(String danhMuc, String thuongHieu, String chatLieu, String keyword, int pages, int limit) {
         String sql = """
                      SELECT * 
                      FROM 
@@ -288,14 +291,17 @@ public class SanPhamService {
                      WHERE dm.ten_danh_muc LIKE ? 
                             AND th.ten_thuong_hieu LIKE ?
                             AND cl.chat_lieu like ?
+                            AND (sp.ten LIKE ? OR sp.ma_san_pham LIKE ?)
                      ) AS FilteredResults
                      ORDER BY ID
                      OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
                      """;
         return this.selectBySql(sql,
-                "%" + danhMuc,
-                "%" + thuongHieu,
-                "%" + chatLieu,
+                "%" + danhMuc + "%",
+                "%" + thuongHieu+ "%",
+                "%" + chatLieu + "%",
+                "%" + keyword + "%%",
+                "%" + keyword + "%%",
                 (pages - 1) * limit, limit);
     }
 }
