@@ -11,6 +11,7 @@ public class HoaDon {
     private Integer trangThai;
     private Integer idNV;
     private Integer idKH;
+    private Integer idKM;
     private NhanVien nv;
     private KhachHang kh;
 
@@ -27,6 +28,10 @@ public class HoaDon {
         this.idKH = idKH;
     }
 
+    public HoaDon(String ma) {
+        this.ma = ma;
+    }
+    
     public HoaDon(NhanVien nv) {
         this.nv = nv;
     }

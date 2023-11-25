@@ -28,7 +28,6 @@ public class NhanVienService {
             rs.getStatement().getConnection().close();
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

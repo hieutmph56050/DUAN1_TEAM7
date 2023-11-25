@@ -1,4 +1,3 @@
-
 package Service;
 
 import repository.JdbcHelper;
@@ -58,6 +57,19 @@ public class SanPhamCTService {
                 entity.getId_mauSac(),
                 entity.getId_HinhDang(),
                 entity.getId_Anh(),
+                entity.getId()
+        );
+    }
+
+    public void updateSoLuong(SanPhamCT entity) {
+        String sql = """
+                     UPDATE [dbo].[SPCT]
+                        SET [so_luong] = ?
+                      WHERE ID = ?
+                     """;
+
+        JdbcHelper.update(sql,
+                entity.getSoLuong(),
                 entity.getId()
         );
     }
@@ -212,7 +224,64 @@ public class SanPhamCTService {
                 (pages - 1) * limit, limit);
     }
 
-    public List<SanPhamCT> FilterPage(Integer giaMin, Integer giaMax, String mau, String hinhDang, String maSP) {
+    public List<SanPhamCT> selectPageStatus(String keyWord) {
+        String sql = """
+                            SELECT 
+                                spct.ID, 
+                                sp.ma_san_pham,
+                                sp.ten, 
+                                spct.gia, 
+                                spct.so_luong,
+                                ms.ten_mau as MauSac, 
+                                hd.kieu_dang as HinhDang, 
+                                anh.link as HinhAnh, 
+                                spct.trang_thai
+                            FROM dbo.SPCT spct
+                            INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
+                            INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
+                            INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
+                            INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
+                     WHERE spct.trang_thai = 1
+                           and (sp.ma_san_pham like ? or sp.ten like ?)
+                     """;
+        return this.selectBySql(sql,
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%");
+    }
+
+    public List<SanPhamCT> searchKeyWordStatus(String keyWord, int pages, int limit) {
+        String sql = """
+                     SELECT * 
+                     FROM 
+                     (
+                         SELECT 
+                            spct.ID, 
+                            sp.ma_san_pham,
+                            sp.ten, 
+                            spct.gia, 
+                            spct.so_luong,
+                            ms.ten_mau as MauSac, 
+                            hd.kieu_dang as HinhDang, 
+                            anh.link as HinhAnh, 
+                            spct.trang_thai
+                        FROM dbo.SPCT spct
+                        INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
+                        INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
+                        INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
+                        INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
+                     WHERE spct.trang_thai = 1
+                           and (sp.ma_san_pham like ? or sp.ten like ?)
+                     ) AS FilteredResults
+                     ORDER BY ID
+                     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                     """;
+        return this.selectBySql(sql,
+                "%" + keyWord + "%",
+                "%" + keyWord + "%",
+                (pages - 1) * limit, limit);
+    }
+
+    public List<SanPhamCT> FilterPageByMa(Double giaMin, Double giaMax, String mau, String hinhDang, String maSP) {
         String sql = """
                           SELECT 
                                 spct.ID, 
@@ -242,7 +311,7 @@ public class SanPhamCTService {
                 "%" + maSP + "%");
     }
 
-    public List<SanPhamCT> FilterData(Integer giaMin, Integer giaMax, String mau, String hinhDang, String maSP, int pages, int limit) {
+    public List<SanPhamCT> FilterDataByMa(Double giaMin, Double giaMax, String mau, String hinhDang, String maSP, int pages, int limit) {
         String sql = """
                      SELECT * 
                      FROM 
@@ -276,6 +345,75 @@ public class SanPhamCTService {
                 "%" + mau + "%",
                 "%" + hinhDang + "%",
                 "%" + maSP + "%",
+                (pages - 1) * limit, limit);
+    }
+
+    public List<SanPhamCT> FilterPage(String keyWord, Double giaMin, Double giaMax, String mau, String hinhDang) {
+        String sql = """
+                          SELECT 
+                                spct.ID, 
+                                sp.ma_san_pham,
+                                sp.ten, 
+                                spct.gia, 
+                                spct.so_luong,
+                                ms.ten_mau as MauSac, 
+                                hd.kieu_dang as HinhDang, 
+                                anh.link as HinhAnh, 
+                                spct.trang_thai
+                            FROM dbo.SPCT spct
+                            INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
+                            INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
+                            INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
+                            INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
+                         WHERE (sp.ma_san_pham like ? or sp.ten like ?)
+                              and spct.gia BETWEEN ISNULL (?, spct.gia) AND  ISNULL (?, spct.gia)
+                              and ms.ten_mau like ?
+                              and hd.kieu_dang like ?
+                              and spct.trang_thai = 1
+                     """;
+        return this.selectBySql(sql,
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%",
+                giaMin, giaMax,
+                "%" + mau + "%",
+                "%" + hinhDang + "%");
+    }
+
+    public List<SanPhamCT> FilterData(String keyWord, Double giaMin, Double giaMax, String mau, String hinhDang, int pages, int limit) {
+        String sql = """
+                     SELECT * 
+                     FROM 
+                     (
+                        SELECT 
+                                spct.ID, 
+                                sp.ma_san_pham,
+                                sp.ten, 
+                                spct.gia, 
+                                spct.so_luong,
+                                ms.ten_mau as MauSac, 
+                                hd.kieu_dang as HinhDang, 
+                                anh.link as HinhAnh, 
+                                spct.trang_thai
+                            FROM dbo.SPCT spct
+                            INNER JOIN dbo.SanPham sp ON spct.san_pham_id = sp.ID
+                            INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
+                            INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
+                            INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
+                         WHERE (sp.ma_san_pham like ? or sp.ten like ?)
+                              and spct.gia BETWEEN ISNULL (?, spct.gia) AND  ISNULL (?, spct.gia)
+                              and ms.ten_mau like ?
+                              and hd.kieu_dang like ?
+                              and spct.trang_thai = 1
+                     ) AS FilteredResults
+                     ORDER BY ID
+                     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                     """;
+        return this.selectBySql(sql,
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%",
+                giaMin, giaMax,
+                "%" + mau + "%",
+                "%" + hinhDang + "%",
                 (pages - 1) * limit, limit);
     }
 }

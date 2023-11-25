@@ -7,18 +7,20 @@ public class HoaDonChiTiet {
     private Integer id_SPCT;
     private Integer soLuong;
     private Double gia;
-    private Integer id_KM;
+    private HoaDon hd;
+    private SanPhamCT spct;
 
     public HoaDonChiTiet() {
     }
 
-    public HoaDonChiTiet(Integer id, Integer id_HoaDon, Integer id_SPCT, Integer soLuong, Double gia, Integer id_KM) {
+    public HoaDonChiTiet(Integer id, Integer id_HoaDon, Integer id_SPCT, Integer soLuong, Double gia, HoaDon hd, SanPhamCT spct) {
         this.id = id;
         this.id_HoaDon = id_HoaDon;
         this.id_SPCT = id_SPCT;
         this.soLuong = soLuong;
         this.gia = gia;
-        this.id_KM = id_KM;
+        this.hd = hd;
+        this.spct = spct;
     }
 
     public Integer getId() {
@@ -61,12 +63,23 @@ public class HoaDonChiTiet {
         this.gia = gia;
     }
 
-    public Integer getId_KM() {
-        return id_KM;
+    public HoaDon getHd() {
+        return hd;
     }
 
-    public void setId_KM(Integer id_KM) {
-        this.id_KM = id_KM;
+    public void setHd(HoaDon hd) {
+        this.hd = hd;
     }
 
+    public SanPhamCT getSpct() {
+        return spct;
+    }
+
+    public void setSpct(SanPhamCT spct) {
+        this.spct = spct;
+    }
+
+    public Double getTongTien() {
+        return this.gia * this.soLuong;
+    }
 }

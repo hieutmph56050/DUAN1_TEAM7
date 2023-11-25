@@ -41,6 +41,12 @@ public class SanPhamCT {
         this.hinhDang = hinhDang;
     }
 
+    public SanPhamCT(SanPham sanPham, MauSac mauSac, HinhDang hinhDang) {
+        this.sanPham = sanPham;
+        this.mauSac = mauSac;
+        this.hinhDang = hinhDang;
+    }
+
     public Integer getId() {
         return id;
     }

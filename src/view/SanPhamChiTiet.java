@@ -90,6 +90,7 @@ public class SanPhamChiTiet extends javax.swing.JDialog {
                 });
             }
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Lỗi truy vấn dữ liệu!");
         }
     }
@@ -101,23 +102,23 @@ public class SanPhamChiTiet extends javax.swing.JDialog {
         
         try {
             
-            Integer giaMin = null;
+            Double giaMin = null;
             if (!txtMin.getText().trim().isEmpty()) {
-                giaMin = Integer.parseInt(txtMin.getText());
+                giaMin = Double.parseDouble(txtMin.getText());
             }
-            Integer giaMax = null;
+            Double giaMax = null;
             if (!txtMax.getText().trim().isEmpty()) {
-                giaMax = Integer.parseInt(txtMax.getText());
+                giaMax = Double.parseDouble(txtMax.getText());
             }
             
             String mau = (String) cbbFilterMau.getSelectedItem();
             
             String hinhDang = (String) cbbFilterKieuDang.getSelectedItem();
             
-            List<SanPhamCT> listPage = service.FilterPage(giaMin, giaMax, mau, hinhDang, maSP);
+            List<SanPhamCT> listPage = service.FilterPageByMa(giaMin, giaMax, mau, hinhDang, maSP);
             this.getPages(listPage);
             
-            List<SanPhamCT> list = service.FilterData(giaMin, giaMax, mau, hinhDang, maSP, pages, limit);
+            List<SanPhamCT> list = service.FilterDataByMa(giaMin, giaMax, mau, hinhDang, maSP, pages, limit);
             for (SanPhamCT spct : list) {
                 model.addRow(new Object[]{
                     spct.getId(),
@@ -644,7 +645,7 @@ public class SanPhamChiTiet extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 964, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -694,7 +695,7 @@ public class SanPhamChiTiet extends javax.swing.JDialog {
                     .addComponent(btnClean, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnFirstPages)
@@ -741,8 +742,8 @@ public class SanPhamChiTiet extends javax.swing.JDialog {
                     .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -863,21 +864,21 @@ public class SanPhamChiTiet extends javax.swing.JDialog {
         
         if (!txtMin.getText().trim().isEmpty()
                 && !txtMax.getText().trim().isEmpty()) {
-            if (Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
+            if (Double.parseDouble(txtMax.getText()) < Double.parseDouble(txtMin.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập min nhỏ hơn giá max!");
                 return;
             }
         }
         
         if (!txtMin.getText().trim().isEmpty()) {
-            if (Integer.parseInt(txtMin.getText()) < 0) {
+            if (Double.parseDouble(txtMin.getText()) < 0) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập giá lớn hơn 0!");
                 return;
             }
         }
         
         if (!txtMax.getText().trim().isEmpty()) {
-            if (Integer.parseInt(txtMax.getText()) < 0) {
+            if (Double.parseDouble(txtMax.getText()) < 0) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập giá lớn hơn 0!");
                 return;
             }
