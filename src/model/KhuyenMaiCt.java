@@ -4,10 +4,14 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author hieua
  */
-public class HoaDon {
-    
+public class KhuyenMaiCt {
+    private int iD, soLuong, kieuGiam;
+    private Date ngayBatDau, ngayKetThuc;
+    private KhuyenMai khuyenMai;
 }

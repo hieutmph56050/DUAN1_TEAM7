@@ -8,6 +8,6 @@ package model;
  *
  * @author hieua
  */
-public class HoaDon {
+public class HoaDonCT {
     
 }

@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Service;
 
 import repository.JdbcHelper;
@@ -139,7 +142,7 @@ public class SanPhamCTService {
             while (rs.next()) {
                 SanPhamCT spct = new SanPhamCT();
                 spct.setId(rs.getInt("ID"));
-                spct.setGia(rs.getDouble("gia"));
+                spct.setGia(rs.getInt("gia"));
                 spct.setSoLuong(rs.getInt("so_luong"));
                 spct.setTrangThai(rs.getInt("trang_thai"));
                 spct.setSanPham(new SanPham(rs.getString("ma_san_pham"),
@@ -154,12 +157,11 @@ public class SanPhamCTService {
             rs.getStatement().getConnection().close();
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
 
-    public List<SanPhamCT> selectByKeyWord(String maSP) {
+    public List<SanPhamCT> selectByKeyWord(String keyword, String maSP) {
         String sql = """
                             SELECT 
                                 spct.ID, 
@@ -176,13 +178,16 @@ public class SanPhamCTService {
                             INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                             INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                             INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
-                     WHERE sp.ma_san_pham like ?
+                     WHERE (sp.ten LIKE ? OR sp.ma_san_pham LIKE ?)
+                            and sp.ma_san_pham like ?
                      """;
         return this.selectBySql(sql,
+                "%" + keyword + "%%",
+                "%" + keyword + "%%",
                 "%" + maSP + "%");
     }
 
-    public List<SanPhamCT> searchKeyWord(String maSP, int pages, int limit) {
+    public List<SanPhamCT> searchKeyWord(String keyWord, String maSP, int pages, int limit) {
         String sql = """
                      SELECT * 
                      FROM 
@@ -202,12 +207,15 @@ public class SanPhamCTService {
                         INNER JOIN dbo.MauSac ms ON spct.mau_sac_id = ms.ID
                         INNER JOIN dbo.HinhDang hd ON spct.hinh_dang_id = hd.ID
                         INNER JOIN dbo.Anh anh ON spct.anh_id = anh.ID
-                     WHERE sp.ma_san_pham like ?
+                     WHERE (sp.ten LIKE ? OR sp.ma_san_pham LIKE ?)
+                            and sp.ma_san_pham like ?
                      ) AS FilteredResults
                      ORDER BY ID
                      OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
                      """;
         return this.selectBySql(sql,
+                "%" + keyWord + "%%",
+                "%" + keyWord + "%%",
                 "%" + maSP + "%",
                 (pages - 1) * limit, limit);
     }

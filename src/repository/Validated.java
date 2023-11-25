@@ -49,7 +49,7 @@ public class Validated {
         if (numeric == null) {
             return false;
         }
-        String regex = "^[+]?(?!0$)[0-9]*\\.?[0-9]+$";
+        String regex = "^(?!0$)[0-9]*\\.?[0-9]+$";
         return numeric.matches(regex);
     }
 
@@ -57,7 +57,7 @@ public class Validated {
         if (numeric == null) {
             return false;
         }
-        String regex = "^[+]?[0-9]+$";
+        String regex = "^[0-9]+$";
         return numeric.matches(regex);
     }
 }

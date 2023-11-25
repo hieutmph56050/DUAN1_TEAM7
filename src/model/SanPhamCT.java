@@ -15,7 +15,7 @@ public class SanPhamCT {
     private Integer id_HinhDang;
     private Integer id_mauSac;
     private Integer id_Anh;
-    private Double gia;
+    private Integer gia;
     private Integer soLuong;
     private Integer trangThai;
     private SanPham sanPham;
@@ -26,7 +26,7 @@ public class SanPhamCT {
     public SanPhamCT() {
     }
 
-    public SanPhamCT(Integer id, Integer id_sanPham, Integer id_HinhDang, Integer id_mauSac, Integer id_Anh, Double gia, Integer soLuong, Integer trangThai, SanPham sanPham, MauSac mauSac, HinhAnh hinhAnh, HinhDang hinhDang) {
+    public SanPhamCT(Integer id, Integer id_sanPham, Integer id_HinhDang, Integer id_mauSac, Integer id_Anh, Integer gia, Integer soLuong, Integer trangThai, SanPham sanPham, MauSac mauSac, HinhAnh hinhAnh, HinhDang hinhDang) {
         this.id = id;
         this.id_sanPham = id_sanPham;
         this.id_HinhDang = id_HinhDang;
@@ -81,11 +81,11 @@ public class SanPhamCT {
         this.id_Anh = id_Anh;
     }
 
-    public Double getGia() {
+    public Integer getGia() {
         return gia;
     }
 
-    public void setGia(Double gia) {
+    public void setGia(Integer gia) {
         this.gia = gia;
     }
 

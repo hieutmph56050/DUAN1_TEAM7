@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Service;
 
 import java.util.ArrayList;
@@ -7,6 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import repository.JdbcHelper;
 
+/**
+ *
+ * @author ledin
+ */
 public class NhanVienService {
 
     protected List<NhanVien> selectBySql(String sql, Object... args) {
@@ -28,7 +36,6 @@ public class NhanVienService {
             rs.getStatement().getConnection().close();
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
