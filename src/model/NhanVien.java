@@ -30,10 +30,6 @@ public class NhanVien {
         this.vaiTro = vaiTro;
     }
 
-    public NhanVien(String ten) {
-        this.ten = ten;
-    }
-
     public Integer getId() {
         return id;
     }

@@ -1,8 +1,15 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
-import java.sql.Date;
-
+/**
+ *
+ * @author hieua
+ */
 public class HoaDon {
+<<<<<<< HEAD
 
     private Integer id;
     private String ma;
@@ -108,4 +115,7 @@ public class HoaDon {
         this.kh = kh;
     }
 
+=======
+    
+>>>>>>> 971136aa0af6cec4591770ccaf358d6fe863df93
 }

@@ -41,6 +41,15 @@ public class SanPham {
         this.phanLoai = phanLoai;
     }
 
+    public SanPham( String ma, String ten, DanhMuc danhMuc, ThuongHieu thuongHieu, ChatLieu chatLieu, PhanLoai phanLoai) {
+        this.ma = ma;
+        this.ten = ten;
+        this.danhMuc = danhMuc;
+        this.thuongHieu = thuongHieu;
+        this.chatLieu = chatLieu;
+        this.phanLoai = phanLoai;
+    }
+
     public SanPham(String ma, String ten) {
         this.ma = ma;
         this.ten = ten;

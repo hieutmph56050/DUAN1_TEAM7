@@ -204,7 +204,7 @@ public class Login extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private int check;
-    private final NhanVienService service = new NhanVienService();
+    private NhanVienService service = new NhanVienService();
 
     private void init() {
         setLocationRelativeTo(null);
